@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Control</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .temp-display {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .temp {
+            font-size: 48px;
+            color: #fff;
+            position: absolute;
+        }
+
+        .temp-info {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .temp-info .value {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .box {
+            margin: 0 8px; 
+            padding: 18px 10px;
+            border-radius: 12px;
+            background-image: -o-linear-gradient(135deg, #f0f1fa, #f7f8fd);
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 4px #ffffff;
+            text-align: center;
+            border: 2px solid #4CAF50;
+        }
+
+        .button-link {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            font-size: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .fr {
+            margin: 0 8px; 
+            padding: 18px 10px;
+            border-radius: 12px;
+            background-image: -o-linear-gradient(135deg, #f0f1fa, #f7f8fd);
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 4px #ffffff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>iot fridge</h2>
+        </div>
+ 
+        <div class="temp-display">
+            <div class="circle">
+                <span class="temp" id="tempValue"><p><strong>Loading...</strong></p></span>
+            </div>
+        </div>
+        
+        <div class="temp-info">
+            <div><div class="fr">fridge Temp<br><span class="value" id="fridgeTemp">Loading...</span></div></div>
+            <div class="box">
+                <a href="/on" class="button-link"><strong>" + getLEDState() + "</strong></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch temperature data from the server
+        function fetchTemperature() {
+            fetch('/temperature')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('tempValue').innerHTML = "<p><strong>" + data.temperature + " &deg;C</strong></p>";
+                document.getElementById('fridgeTemp').innerText = data.temperature + "°C";
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Refresh temperature every 2 seconds
+        setInterval(fetchTemperature, 2000);
+
+        // Initial fetch
+        fetchTemperature();
+    </script>
+</body>
+</html>
